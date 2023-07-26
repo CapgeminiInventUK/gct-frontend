@@ -3,8 +3,8 @@ import { Discipline, GradedCompetencies, TableData } from '../Types/Data';
 function createData(
   grade: keyof GradedCompetencies,
   competency: string,
-  evidence: string = '',
-  notes: string = '',
+  evidence = '',
+  notes = '',
   discipline: Discipline = Discipline.General
 ): TableData {
   return {

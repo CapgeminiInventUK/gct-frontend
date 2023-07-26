@@ -22,7 +22,7 @@ const DataWrapper = ({ children }: { children: JSX.Element }): JSX.Element => {
   useEffect(() => {
     const userData = localStorage.getItem(`user_data_${userDetails.email}`);
     if (userData) {
-      setCompetencies(JSON.parse(userData));
+      setCompetencies(JSON.parse(userData) as TableData[]);
     } else {
       setCompetencies(defaultData);
     }

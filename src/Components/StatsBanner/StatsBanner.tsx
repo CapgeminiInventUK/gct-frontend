@@ -34,7 +34,7 @@ const CustomCircularProgress = ({
         value={percent}
         thickness={8}
         size={50}
-        color={colour as any}
+        color={colour as 'success' | 'warning' | 'error'}
       />
       <span className={styles.label}>
         {label}: {completed}/{total} ({percent.toFixed(0)}%)

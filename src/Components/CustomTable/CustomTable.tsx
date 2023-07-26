@@ -22,7 +22,7 @@ import Filters from './Filters/Filters';
 
 type Order = 'asc' | 'desc';
 
-function stableSort(array: TableData[], orderBy: keyof TableData, order: Order) {
+function stableSort(array: TableData[], orderBy: keyof TableData, order: Order): TableData[] {
   return array.sort((a, b) => {
     return order === 'asc' ? (a[orderBy] < b[orderBy] ? -1 : 1) : a[orderBy] < b[orderBy] ? 1 : -1;
   });
@@ -58,11 +58,13 @@ interface TableProps {
   orderBy: string;
 }
 
-function CustomTableHead(props: TableProps) {
+function CustomTableHead(props: TableProps): JSX.Element {
   const { order, orderBy, onRequestSort } = props;
-  const createSortHandler = (property: keyof TableData) => (event: React.MouseEvent<unknown>) => {
-    onRequestSort(event, property);
-  };
+  const createSortHandler =
+    (property: keyof TableData) =>
+    (event: React.MouseEvent<unknown>): void => {
+      onRequestSort(event, property);
+    };
 
   return (
     <TableHead className={styles.tableHead}>
@@ -114,7 +116,7 @@ const CustomTable = (): JSX.Element => {
     }
   }, [setDisciplineFilter, userDetails]);
 
-  const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof TableData) => {
+  const handleRequestSort = (_: React.MouseEvent<unknown>, property: keyof TableData): void => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
@@ -149,7 +151,7 @@ const CustomTable = (): JSX.Element => {
     event: React.MouseEvent<unknown>,
     grade: keyof GradedCompetencies,
     competency: string
-  ) => {
+  ): void => {
     setCompetencies((prevValue) => {
       const newCompetencies = [...prevValue];
       const index = newCompetencies.findIndex(
@@ -166,11 +168,11 @@ const CustomTable = (): JSX.Element => {
     });
   };
 
-  const handleChangePage = (event: unknown, newPage: number) => {
+  const handleChangePage = (_: unknown, newPage: number): void => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
@@ -214,7 +216,7 @@ const CustomTable = (): JSX.Element => {
                       <Checkbox
                         color="primary"
                         checked={row.checked}
-                        onClick={(event) => handleClick(event, row.grade, row.competency)}
+                        onClick={(event): void => handleClick(event, row.grade, row.competency)}
                         inputProps={{
                           'aria-labelledby': labelId,
                         }}

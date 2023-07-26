@@ -15,7 +15,7 @@ const Login = (): JSX.Element => {
 
   const [engineer, setEngineer] = useState(false);
 
-  const submitForm = () => {
+  const submitForm = (): void => {
     if (email.length < 5) {
       setEmailError(true);
     } else {
@@ -29,7 +29,7 @@ const Login = (): JSX.Element => {
     }
 
     if (!(email.length < 5) && !(grade === '')) {
-      localStorage.setItem('user_details', `${email},${grade},${engineer}`);
+      localStorage.setItem('user_details', `${email},${grade},${String(engineer)}`);
       navigate('/tracker');
     }
   };
@@ -49,13 +49,17 @@ const Login = (): JSX.Element => {
           <Typography variant="h5" color={emailError ? 'red' : 'black'}>
             Email
           </Typography>
-          <TextField onChange={(e) => setEmail(e.target.value)} value={email} />
+          <TextField onChange={(event): void => setEmail(event.target.value)} value={email} />
         </div>
         <div className={styles.formItem}>
           <Typography variant="h5" color={gradeError ? 'red' : 'black'}>
             Current grade
           </Typography>
-          <Select sx={{ width: '75px' }} onChange={(e) => setGrade(e.target.value)} value={grade}>
+          <Select
+            sx={{ width: '75px' }}
+            onChange={(event): void => setGrade(event.target.value)}
+            value={grade}
+          >
             {GRADES.map((grade) => (
               <MenuItem key={grade} value={grade}>
                 {grade}
@@ -67,7 +71,10 @@ const Login = (): JSX.Element => {
           <Typography variant="h5">Are you an engineer?</Typography>
           <div className={styles.toggle}>
             <Typography variant="body1">No</Typography>
-            <Switch onChange={(e) => setEngineer(e.target.checked)} value={engineer} />
+            <Switch
+              onChange={(event): void => setEngineer(event.target.checked)}
+              value={engineer}
+            />
             <Typography variant="body1">Yes</Typography>
           </div>
         </div>
