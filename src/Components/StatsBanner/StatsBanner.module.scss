@@ -1,0 +1,18 @@
+.container {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.gradeContainer {
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100spx;
+
+    .label {
+        font-size: 16px;
+        margin-top: 10px;
+    }
+}
