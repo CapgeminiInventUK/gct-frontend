@@ -1,0 +1,16 @@
+.textBox {
+    height: 15px;
+    width: 300px;
+    resize: none;
+    overflow: hidden;
+}
+
+.textBoxActive {
+    height: 100px;
+    width: 300px;
+    resize: none;
+}
+
+.hasContent {
+    border: 2px solid rgb(8, 201, 8);
+}
