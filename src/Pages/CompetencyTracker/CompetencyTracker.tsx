@@ -5,11 +5,12 @@ import StatsBanner from "../../Components/StatsBanner/StatsBanner";
 import { TableData } from "../../Types/Data";
 import { useNavigate } from "react-router-dom";
 import { useDataWrapperContext } from "../../Contexts/DataWrapper/DataWrapper";
+import DownloadButton from "../../Components/DownloadButton/DownloadButton";
 
 const CompetencyTracker = (): JSX.Element => {
   const navigate = useNavigate();
 
-  const { userDetails: { email, grade, engineer}, setCompetencies, setUserDetails } = useDataWrapperContext()
+  const { userDetails: { email, grade, engineer}, setCompetencies, setUserDetails, competencies } = useDataWrapperContext()
 
   const logoutHandler = () => {
     localStorage.removeItem('user_details');
@@ -43,6 +44,7 @@ const CompetencyTracker = (): JSX.Element => {
     <Box>
       <Box padding={1} textAlign={'right'}>
         <Typography variant="body1">Logged in as {email}, {grade}{engineer ? ', Engineer' : ''}</Typography>
+        <DownloadButton competencies={competencies} />
         <Button onClick={logoutHandler}>Logout</Button>
       </Box>
       <StatsBanner />

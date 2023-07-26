@@ -216,7 +216,7 @@ const CustomTable = (): JSX.Element => {
                     >
                       {row.grade}
                     </TableCell>
-                    <TableCell align="right">{row.competency}</TableCell>
+                    <TableCell>{row.competency}</TableCell>
                     <EvidenceAndNotes row={row} />
                   </TableRow>
                 );

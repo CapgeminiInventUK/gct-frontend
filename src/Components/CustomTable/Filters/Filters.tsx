@@ -37,9 +37,9 @@ const Filters = (
                     value={checkedFilter}
                     onChange={(e) => setCheckedFilter(e.target.value)}
                 >
-                    <MenuItem value={'All'}>Checked and unchecked</MenuItem>
-                    <MenuItem value={'checked'}>Only checked</MenuItem>
-                    <MenuItem value={'notChecked'}>Only unchecked</MenuItem>
+                    <MenuItem value={'All'}> Completed and incomplete</MenuItem>
+                    <MenuItem value={'checked'}>Only completed</MenuItem>
+                    <MenuItem value={'notChecked'}>Only incomplete</MenuItem>
                 </Select>
 
                 <div>
