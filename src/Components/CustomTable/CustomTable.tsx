@@ -1,9 +1,21 @@
 import { useEffect, useState } from 'react';
 import { visuallyHidden } from '@mui/utils';
-import { TableHead, TableRow, TableCell, TableSortLabel, Box, Paper, Checkbox, TableContainer, Table, TableBody, TablePagination } from '@mui/material';
+import {
+  TableHead,
+  TableRow,
+  TableCell,
+  TableSortLabel,
+  Box,
+  Paper,
+  Checkbox,
+  TableContainer,
+  Table,
+  TableBody,
+  TablePagination,
+} from '@mui/material';
 import { Discipline, GradedCompetencies, TableData } from '../../Types/Data';
 import EvidenceAndNotes from './EvidenceAndNotes/EvidenceAndNotes';
-import styles from './CustomTable.module.scss'
+import styles from './CustomTable.module.scss';
 import { useDataWrapperContext } from '../../Contexts/DataWrapper/DataWrapper';
 import { GRADES } from '../../Utils/globals';
 import Filters from './Filters/Filters';
@@ -12,11 +24,8 @@ type Order = 'asc' | 'desc';
 
 function stableSort(array: TableData[], orderBy: keyof TableData, order: Order) {
   return array.sort((a, b) => {
-    return order === 'asc' ?
-      a[orderBy] < b[orderBy] ? -1 : 1 
-      : a[orderBy] < b[orderBy] ? 1 : -1 
+    return order === 'asc' ? (a[orderBy] < b[orderBy] ? -1 : 1) : a[orderBy] < b[orderBy] ? 1 : -1;
   });
-
 }
 
 interface HeadCell {
@@ -40,7 +49,7 @@ const headCells: readonly HeadCell[] = [
   {
     id: 'notes',
     label: 'Notes',
-  }
+  },
 ];
 
 interface TableProps {
@@ -50,17 +59,15 @@ interface TableProps {
 }
 
 function CustomTableHead(props: TableProps) {
-  const { order, orderBy, onRequestSort } =
-    props;
-  const createSortHandler =
-    (property: keyof TableData) => (event: React.MouseEvent<unknown>) => {
-      onRequestSort(event, property);
-    };
+  const { order, orderBy, onRequestSort } = props;
+  const createSortHandler = (property: keyof TableData) => (event: React.MouseEvent<unknown>) => {
+    onRequestSort(event, property);
+  };
 
   return (
     <TableHead className={styles.tableHead}>
       <TableRow>
-      <TableCell padding="checkbox" />
+        <TableCell padding="checkbox" />
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -88,28 +95,26 @@ function CustomTableHead(props: TableProps) {
 }
 
 const CustomTable = (): JSX.Element => {
-  const [checkedFilter, setCheckedFilter] = useState('All')
-  const [gradeFilter, setGradeFilter] = useState<(keyof GradedCompetencies)[]>([...GRADES])
+  const [checkedFilter, setCheckedFilter] = useState('All');
+  const [gradeFilter, setGradeFilter] = useState<(keyof GradedCompetencies)[]>([...GRADES]);
 
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<keyof TableData>('grade');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
 
-  const { competencies, userDetails, setCompetencies, disciplineFilter, setDisciplineFilter } = useDataWrapperContext()
+  const { competencies, userDetails, setCompetencies, disciplineFilter, setDisciplineFilter } =
+    useDataWrapperContext();
 
   useEffect(() => {
     if (userDetails) {
-      const gradeIndex = GRADES.indexOf(userDetails.grade as keyof GradedCompetencies)
-      setGradeFilter([...GRADES].slice(gradeIndex))
-      setDisciplineFilter(userDetails.engineer ? 'engineering' : 'general')
+      const gradeIndex = GRADES.indexOf(userDetails.grade as keyof GradedCompetencies);
+      setGradeFilter([...GRADES].slice(gradeIndex));
+      setDisciplineFilter(userDetails.engineer ? 'engineering' : 'general');
     }
-  }, [setDisciplineFilter, userDetails])
+  }, [setDisciplineFilter, userDetails]);
 
-  const handleRequestSort = (
-    event: React.MouseEvent<unknown>,
-    property: keyof TableData,
-  ) => {
+  const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof TableData) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
@@ -117,39 +122,48 @@ const CustomTable = (): JSX.Element => {
 
   const filterRows = (rows: TableData[]): TableData[] => {
     return rows
-    .filter((row) => {
-      if (disciplineFilter === 'All') {
+      .filter((row) => {
+        if (disciplineFilter === 'All') {
+          return true;
+        } else if (disciplineFilter === 'general') {
+          return row.discipline === Discipline.General;
+        } else if (disciplineFilter === 'engineering') {
+          return row.discipline === Discipline.Engineering;
+        }
         return true;
-      } else if (disciplineFilter === 'general') {
-        return row.discipline === Discipline.General
-      } else if (disciplineFilter === 'engineering') {
-        return row.discipline === Discipline.Engineering
-      }
-      return true
-    })
-    .filter((row) => {
-      if (checkedFilter === 'All') {
+      })
+      .filter((row) => {
+        if (checkedFilter === 'All') {
+          return true;
+        } else if (checkedFilter === 'checked') {
+          return row.checked;
+        } else if (checkedFilter === 'notChecked') {
+          return row.checked === false;
+        }
         return true;
-      } else if (checkedFilter === 'checked') {
-        return row.checked
-      } else if (checkedFilter === 'notChecked') {
-        return row.checked === false
-      }
-      return true
-    })
-    .filter((row) => (gradeFilter.includes(row.grade)))
-  }
+      })
+      .filter((row) => gradeFilter.includes(row.grade));
+  };
 
-  const handleClick = (event: React.MouseEvent<unknown>, grade: keyof GradedCompetencies, competency: string) => {
+  const handleClick = (
+    event: React.MouseEvent<unknown>,
+    grade: keyof GradedCompetencies,
+    competency: string
+  ) => {
     setCompetencies((prevValue) => {
-      const newCompetencies = [...prevValue]
-      const index = newCompetencies.findIndex((row) => row.competency === competency && row.grade === grade)
+      const newCompetencies = [...prevValue];
+      const index = newCompetencies.findIndex(
+        (row) => row.competency === competency && row.grade === grade
+      );
       if (index !== -1) {
-        newCompetencies[index] = {...newCompetencies[index], checked: !newCompetencies[index].checked}
-        localStorage.setItem(`user_data_${userDetails.email}`, JSON.stringify(newCompetencies))
+        newCompetencies[index] = {
+          ...newCompetencies[index],
+          checked: !newCompetencies[index].checked,
+        };
+        localStorage.setItem(`user_data_${userDetails.email}`, JSON.stringify(newCompetencies));
       }
       return newCompetencies;
-    })
+    });
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -161,31 +175,28 @@ const CustomTable = (): JSX.Element => {
     setPage(0);
   };
 
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - competencies.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - competencies.length) : 0;
 
-
-  const filteredRows = filterRows([...competencies])
-  const visibleRows = stableSort(filteredRows, orderBy, order).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+  const filteredRows = filterRows([...competencies]);
+  const visibleRows = stableSort(filteredRows, orderBy, order).slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
 
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-      <Filters
-        disciplineFilter={disciplineFilter} checkedFilter={checkedFilter} gradeFilter={gradeFilter}
-        setDisciplineFilter={setDisciplineFilter} setCheckedFilter={setCheckedFilter} setGradeFilter={setGradeFilter} 
-      />
+        <Filters
+          disciplineFilter={disciplineFilter}
+          checkedFilter={checkedFilter}
+          gradeFilter={gradeFilter}
+          setDisciplineFilter={setDisciplineFilter}
+          setCheckedFilter={setCheckedFilter}
+          setGradeFilter={setGradeFilter}
+        />
         <TableContainer>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size={'small'}
-          >
-            <CustomTableHead
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={handleRequestSort}
-            />
+          <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size={'small'}>
+            <CustomTableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort} />
             <TableBody>
               {visibleRows.map((row, index) => {
                 const labelId = `enhanced-table-checkbox-${index}`;
@@ -209,11 +220,7 @@ const CustomTable = (): JSX.Element => {
                         }}
                       />
                     </TableCell>
-                    <TableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                    >
+                    <TableCell component="th" id={labelId} scope="row">
                       {row.grade}
                     </TableCell>
                     <TableCell>{row.competency}</TableCell>
@@ -245,6 +252,6 @@ const CustomTable = (): JSX.Element => {
       </Paper>
     </Box>
   );
-}
+};
 
 export default CustomTable;
