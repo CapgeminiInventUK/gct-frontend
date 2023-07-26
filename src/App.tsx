@@ -1,17 +1,16 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import CompetencyTracker from "./Pages/CompetencyTracker/CompetencyTracker";
-import Login from "./Pages/Login/Login";
-import DataWrapper from "./Contexts/DataWrapper/DataWrapper";
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import CompetencyTracker from './Pages/CompetencyTracker/CompetencyTracker';
+import Login from './Pages/Login/Login';
+import DataWrapper from './Contexts/DataWrapper/DataWrapper';
 
 const App = (): JSX.Element => {
-
   const router = createBrowserRouter([
     {
-      path: "/",
+      path: '/',
       element: <Login />,
     },
     {
-      path: "/tracker",
+      path: '/tracker',
       element: <CompetencyTracker />,
     },
   ]);
@@ -21,6 +20,6 @@ const App = (): JSX.Element => {
       <RouterProvider router={router} />
     </DataWrapper>
   );
-}
+};
 
 export default App;
