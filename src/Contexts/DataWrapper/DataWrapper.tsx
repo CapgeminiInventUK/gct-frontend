@@ -24,6 +24,7 @@ const DataWrapper = ({ children }: { children: JSX.Element }): JSX.Element => {
     if (userData) {
       setCompetencies(JSON.parse(userData));
     } else {
+      console.log(defaultData)
       setCompetencies(defaultData);
     }
   }, [userDetails]);

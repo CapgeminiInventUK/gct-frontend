@@ -2,12 +2,12 @@ import { ChangeEvent } from 'react';
 import styles from './TextBox.module.scss';
 
 const TextBox = ({
-  defaultValue,
+  defaultValue = '',
   active,
   setActive,
   handleOnChange,
 }: {
-  defaultValue: string;
+  defaultValue?: string;
   active: boolean;
   setActive: React.Dispatch<React.SetStateAction<boolean>>;
   handleOnChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;

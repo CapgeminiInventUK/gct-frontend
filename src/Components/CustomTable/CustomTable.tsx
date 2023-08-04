@@ -24,7 +24,7 @@ type Order = 'asc' | 'desc';
 
 function stableSort(array: TableData[], orderBy: keyof TableData, order: Order) {
   return array.sort((a, b) => {
-    return order === 'asc' ? (a[orderBy] < b[orderBy] ? -1 : 1) : a[orderBy] < b[orderBy] ? 1 : -1;
+    return order === 'asc' ? ((a[orderBy] ?? '') < (b[orderBy] ?? '') ? -1 : 1) : (a[orderBy] ?? '') < (b[orderBy] ?? '') ? 1 : -1;
   });
 }
 

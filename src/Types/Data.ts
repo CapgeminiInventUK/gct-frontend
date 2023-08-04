@@ -7,8 +7,8 @@ export interface TableData {
   checked: boolean;
   grade: keyof GradedCompetencies;
   competency: string;
-  evidence: string;
-  notes: string;
+  evidence?: string;
+  notes?: string;
   discipline: Discipline;
 }
 
