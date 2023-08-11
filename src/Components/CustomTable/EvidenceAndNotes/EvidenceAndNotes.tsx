@@ -10,7 +10,7 @@ const EvidenceAndNotes = ({ row }: { row: TableData }): JSX.Element => {
 
   const { userDetails, setCompetencies } = useDataWrapperContext();
 
-  const handleOnChange = (e: ChangeEvent<HTMLTextAreaElement>, evidenceOrNotes: string) => {
+  const handleOnChange = (e: ChangeEvent<HTMLTextAreaElement>, evidenceOrNotes: string): void => {
     setCompetencies((prevValue) => {
       const newCompetencies = [...prevValue];
       const index = newCompetencies.findIndex(
@@ -38,7 +38,7 @@ const EvidenceAndNotes = ({ row }: { row: TableData }): JSX.Element => {
           defaultValue={evidence}
           active={active}
           setActive={setActive}
-          handleOnChange={(e) => handleOnChange(e, 'evidence')}
+          handleOnChange={(event): void => handleOnChange(event, 'evidence')}
         />
       </TableCell>
       <TableCell align="right">
@@ -46,7 +46,7 @@ const EvidenceAndNotes = ({ row }: { row: TableData }): JSX.Element => {
           defaultValue={notes}
           active={active}
           setActive={setActive}
-          handleOnChange={(e) => handleOnChange(e, 'notes')}
+          handleOnChange={(event): void => handleOnChange(event, 'notes')}
         />
       </TableCell>
     </>

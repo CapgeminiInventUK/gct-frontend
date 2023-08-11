@@ -15,7 +15,7 @@ const CompetencyTracker = (): JSX.Element => {
     setUserDetails,
   } = useDataWrapperContext();
 
-  const logoutHandler = () => {
+  const logoutHandler = (): void => {
     localStorage.removeItem('user_details');
     navigate('/');
   };
@@ -36,7 +36,7 @@ const CompetencyTracker = (): JSX.Element => {
 
     const userData = localStorage.getItem(`user_data_${email}`);
     if (userData) {
-      const userDataObject: TableData[] = JSON.parse(userData);
+      const userDataObject: TableData[] = JSON.parse(userData) as TableData[];
       setCompetencies(userDataObject);
     }
   }, [navigate, setCompetencies, setUserDetails]);
