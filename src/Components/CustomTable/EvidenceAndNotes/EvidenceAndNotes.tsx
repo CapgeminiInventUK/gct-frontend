@@ -3,12 +3,13 @@ import { TableCell } from '@mui/material';
 import TextBox from '../../TextBox/TextBox';
 import { TableData } from '../../../Types/Data';
 import { useDataWrapperContext } from '../../../Contexts/DataWrapper/DataWrapper';
+import postUser from '../../../Api/postUser';
 
 const EvidenceAndNotes = ({ row }: { row: TableData }): JSX.Element => {
   const { competency, grade, evidence, notes } = row;
   const [active, setActive] = useState(false);
 
-  const { userDetails, setCompetencies } = useDataWrapperContext();
+  const { setCompetencies, userEmail } = useDataWrapperContext();
 
   const handleOnChange = (e: ChangeEvent<HTMLTextAreaElement>, evidenceOrNotes: string): void => {
     setCompetencies((prevValue) => {
@@ -25,8 +26,15 @@ const EvidenceAndNotes = ({ row }: { row: TableData }): JSX.Element => {
           newCompetencies[index] = { ...newCompetencies[index], notes: e.target.value };
         }
 
-        localStorage.setItem(`user_data_${userDetails.email}`, JSON.stringify(newCompetencies));
+        const userCompetencies = newCompetencies.map((comp) => ({
+          competencyId: comp.id,
+          checked: comp.checked,
+          evidence: comp.evidence,
+          notes: comp.notes,
+        }))
+        postUser(userCompetencies, userEmail)
       }
+
       return newCompetencies;
     });
   };

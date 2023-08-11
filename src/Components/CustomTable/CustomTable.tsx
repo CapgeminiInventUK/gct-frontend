@@ -19,6 +19,7 @@ import styles from './CustomTable.module.scss';
 import { useDataWrapperContext } from '../../Contexts/DataWrapper/DataWrapper';
 import { GRADES } from '../../Utils/globals';
 import Filters from './Filters/Filters';
+import postUser from '../../Api/postUser';
 
 type Order = 'asc' | 'desc';
 
@@ -105,16 +106,17 @@ const CustomTable = (): JSX.Element => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
 
-  const { competencies, userDetails, setCompetencies, disciplineFilter, setDisciplineFilter } =
+  const { userEmail, competencies, setCompetencies, disciplineFilter, setDisciplineFilter } =
     useDataWrapperContext();
 
   useEffect(() => {
-    if (userDetails) {
-      const gradeIndex = GRADES.indexOf(userDetails.grade as keyof GradedCompetencies);
+    const [email, grade, engineer] = localStorage.getItem('user_details')?.split(',') ?? ['','','']
+    if (email && grade && engineer) {
+      const gradeIndex = GRADES.indexOf(grade as keyof GradedCompetencies);
       setGradeFilter([...GRADES].slice(gradeIndex));
-      setDisciplineFilter(userDetails.engineer ? 'engineering' : 'general');
+      setDisciplineFilter(engineer === 'True' ? 'engineering' : 'general');
     }
-  }, [setDisciplineFilter, userDetails]);
+  }, [setDisciplineFilter]);
 
   const handleRequestSort = (_: React.MouseEvent<unknown>, property: keyof TableData): void => {
     const isAsc = orderBy === property && order === 'asc';
@@ -162,7 +164,14 @@ const CustomTable = (): JSX.Element => {
           ...newCompetencies[index],
           checked: !newCompetencies[index].checked,
         };
-        localStorage.setItem(`user_data_${userDetails.email}`, JSON.stringify(newCompetencies));
+
+        const userCompetencies = newCompetencies.map((comp) => ({
+          competencyId: comp.id,
+          checked: comp.checked,
+          evidence: comp.evidence,
+          notes: comp.notes,
+        }))
+        postUser(userCompetencies, userEmail)
       }
       return newCompetencies;
     });

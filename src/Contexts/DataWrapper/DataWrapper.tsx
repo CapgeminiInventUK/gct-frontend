@@ -1,6 +1,9 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { DataWrapperContextProps, TableData, UserDetails } from '../../Types/Data';
-import { defaultData } from '../../Data/Competencies';
+import { DataWrapperContextProps, TableData } from '../../Types/Data';
+import getUser from '../../Api/getUser';
+import { getUserDetails } from '../../Utils/localStorage';
+import getCompetencies from '../../Api/getCompetencies';
+import getUserCompetencies from '../../Data/Competencies';
 
 export const DataWrapperContext = createContext<DataWrapperContextProps>(
   {} as DataWrapperContextProps
@@ -13,27 +16,22 @@ export const useDataWrapperContext = (): DataWrapperContextProps => {
 const DataWrapper = ({ children }: { children: JSX.Element }): JSX.Element => {
   const [disciplineFilter, setDisciplineFilter] = useState('All');
   const [competencies, setCompetencies] = useState<TableData[]>([]);
-  const [userDetails, setUserDetails] = useState<UserDetails>({
-    email: '',
-    grade: '',
-    engineer: false,
-  });
+  const [userEmail, setUserEmail] = useState<string>();
 
   useEffect(() => {
-    const userData = localStorage.getItem(`user_data_${userDetails.email}`);
-    if (userData) {
-      setCompetencies(JSON.parse(userData) as TableData[]);
-    } else {
-      console.log(defaultData)
-      setCompetencies(defaultData);
-    }
-  }, [userDetails]);
+    const { email } = getUserDetails();
+    setUserEmail(email);
+    getUser(email).then(async (data) => {
+      const competenciesList = await getCompetencies();
+      setCompetencies(getUserCompetencies(data.data.userCompetencies, competenciesList.data))
+    });
+  }, []);
 
   const value = {
     competencies,
     setCompetencies,
-    userDetails,
-    setUserDetails,
+    userEmail,
+    setUserEmail,
     disciplineFilter,
     setDisciplineFilter,
   };

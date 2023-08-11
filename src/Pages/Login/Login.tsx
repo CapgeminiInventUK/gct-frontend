@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, MenuItem, Select, Switch, TextField, Typography } from '@mui/material';
 import { GRADES } from '../../Utils/globals';
 import styles from './Login.module.scss';
+import { setUserDetails } from '../../Utils/localStorage';
 
 const Login = (): JSX.Element => {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const Login = (): JSX.Element => {
     }
 
     if (!(email.length < 5) && !(grade === '')) {
-      localStorage.setItem('user_details', `${email},${grade},${String(engineer)}`);
+      setUserDetails(email, grade, engineer)
       navigate('/tracker');
     }
   };
